@@ -1,0 +1,77 @@
+## Hexagonal Grid Game Board
+
+This week's quiz is to create the distance computation methods for a 
+hexagonal game board. In addition to implementing the simple 
+unobstructed distance you will also implement an obstructed_distance 
+method: the distance between two positions where you must go around 
+obstructions. I've provided a couple of classes to help you get 
+started. The print method on HexBoard prints out a board where each 
+hex displays it's distance from position [4,4].
+
+Partial solutions are welcome! Team solutions are welcome! I want to 
+see everyone on ruby-talk give this one a shot!
+
+class Hex 
+  def obstructed? 
+    false 
+  end 
+end
+
+class HexBoard 
+  def initialize(rows=9, cols=9) 
+    @rows, @cols = rows, cols 
+    @board = Array.new(@rows) do |row| 
+      Array.new(@cols) do |col| 
+        Hex.new 
+      end 
+    end 
+  end
+
+  def distance(position1, position2) 
+    # Distance between two hexes on the board 
+  end
+
+  def obstructed_distance(position1, position2, &block) 
+    # Distance between two hexes on the board having to navigate obstructions 
+    # Obstructions are detected by passing the hex in question into the block 
+    # block will return true if the yielded hex should be counted as obstructed 
+    # EX: dist = obstructed_distance(a, b) { |hex| hex.obstructed? } 
+  end
+
+  # This will print the board out to the console to let you 
+  # know if you're on the right track 
+  def draw 
+    @rows.times do |row| 
+      line = '' 
+      line << "#{row}:" 
+      (@cols - row).times {line << ' '}
+
+      @cols.times do |col| 
+        line << (distance([4,4], [row,col]) || 'X').to_s 
+        line << ' ' 
+      end
+
+      puts line 
+    end 
+  end
+
+  def [](row) 
+    @board[row] 
+  end 
+end
+
+board = HexBoard.new 
+board.draw
+
+- - - - - - - - - - - - - - - - - - - - - - - - 
+Example Output of print: 
+0:         4 4 4 4 4 5 6 7 8 
+1:        4 3 3 3 3 4 5 6 7 
+2:       4 3 2 2 2 3 4 5 6 
+3:      4 3 2 1 1 2 3 4 5 
+4:     4 3 2 1 0 1 2 3 4 
+5:    5 4 3 2 1 1 2 3 4 
+6:   6 5 4 3 2 2 2 3 4 
+7:  7 6 5 4 3 3 3 3 4 
+8: 8 7 6 5 4 4 4 4 4
+
