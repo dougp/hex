@@ -49,7 +49,9 @@ class HexBoard
     9999
   end
   #distance with obstructions note we cant cache any of this because technically obstructions can appear for each move call
+  #but we let the user decide when to cache using the instance variable memo
   def obstructed_distance(position1, position2, &block) 
+    if @memo and @memo[position2] then return @memo[position2] end
     distance_board = Hash.new {|h,k| h[k] = Hash.new(&h.default_proc)} #not ideal but this is the magical never ending hash function 
     distances=Hash.new(inf) #the distances from positiion 1 to every other point
     unvisited=all_cells
@@ -68,11 +70,13 @@ class HexBoard
       }.each{|x| if distances[current_node] + distance_board[current_node][x] < distances[x] then distances[x]=distances[current_node] + distance_board[current_node][x] end}  #see if any of the unvisited nodes are closer then we have so far
       current_node=unvisited.sort_by{|x| distances[x] }.first #get the new current node which is defined as the closest unvisited node
     end
+    if @memo then @memo=@memo.merge(distances) end #add all the computed distances to memo
     distances[position2] unless distances[position2]==inf #return nil if the distance is inf instead of 999999 or whatever inf is defined as
   end
   # This will print the board out to the console to let you 
   # know if you're on the right track 
   def draw(obstructed=nil)
+    @memo=Hash.new
     @rows.times do |row| 
       line = '' 
       line << "#{row}:" 
@@ -89,6 +93,7 @@ class HexBoard
 
       puts line 
     end 
+    @memo=nil
   end
 
   def [](row) 
